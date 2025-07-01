@@ -4,21 +4,20 @@ from rest_framework import serializers
 from .models import Transaction, Beneficiaire, CanalPaiement, StatutTransaction
 
 class TransactionSerializers(serializers.ModelSerializer):
-    beneficiaire_phone = serializers.CharField(max_length=20, write_only=True)  # Corrigé: max_length=20
-    canal_paiement_id = serializers.UUIDField(write_only=True)  # Corrigé: canal_paiement_id
+    beneficiaire_phone = serializers.CharField(max_length=20, write_only=True) 
+    canal_paiement_id = serializers.UUIDField(write_only=True)  
     
     class Meta:
         model = Transaction
         fields = [
             'montantEnvoye',
-            'montantConverti',
             'deviseEnvoi',
             'deviseReception',
             'beneficiaire_phone',
-            'canal_paiement_id',  # Corrigé: canal_paiement_id
+            'canal_paiement_id',  
         ]
     
-    def validate_montantEnvoye(self, value):  # Corrigé: indentation
+    def validate_montantEnvoye(self, value):  
         """Vérifier si le montant envoyé est valide"""
         if value <= 0:
             raise serializers.ValidationError("Le montant envoyé doit être supérieur à 0")
@@ -28,7 +27,7 @@ class TransactionSerializers(serializers.ModelSerializer):
             raise serializers.ValidationError("Le montant envoyé doit être supérieur à 100")
         return value
     
-    def validate_canal_paiement_id(self, value):  # Corrigé: indentation + nom
+    def validate_canal_paiement_id(self, value):  
         """Vérifier si le canal de paiement existe ou est actif"""
         try:
             canal = CanalPaiement.objects.get(id=value, is_active=True)
@@ -36,29 +35,32 @@ class TransactionSerializers(serializers.ModelSerializer):
         except CanalPaiement.DoesNotExist:
             raise serializers.ValidationError("Le canal de paiement n'existe pas ou est inactif")
         
-    def create(self, validated_data):  # Corrigé: indentation
+    def create(self, validated_data):
         """Créer une transaction avec calculs automatiques"""
         montant_envoye = validated_data['montantEnvoye']
         canal_paiement_id = validated_data.pop('canal_paiement_id')
         beneficiaire_phone = validated_data.pop('beneficiaire_phone') 
-        
+    
         # Récupération du canal de paiement pour appliquer les frais
         canal = CanalPaiement.objects.get(id=canal_paiement_id)     
-        
-        # Calcul des frais
-        frais_percentage = (montant_envoye * canal.fees_percentage) / 100
+    
+        # CORRECTION : Convertir en Decimal pour éviter l'erreur
+        from decimal import Decimal
+    
+        # Calcul des frais (conversion en Decimal)
+        frais_percentage = (Decimal(str(montant_envoye)) * canal.fees_percentage) / 100
         frais_fixe = canal.fees_fixed
         frais_total = frais_percentage + frais_fixe
         
         # Calcul du montant converti 
-        montant_converti = montant_envoye - frais_total
-        montant_recu = montant_converti  # Maybe je pourrais changer ça
+        montant_converti = Decimal(str(montant_envoye)) - frais_total
+        montant_recu = montant_converti
         
         # Créer une transaction
         transaction = Transaction.objects.create(
             montantEnvoye=montant_envoye,
-            montantConverti=montant_converti,
-            montantRecu=montant_recu,
+            montantConverti=float(montant_converti),  # Reconvertir en float pour le modèle
+            montantRecu=float(montant_recu),
             frais=f"{frais_total:.2f} XOF",
             deviseEnvoi=validated_data.get('deviseEnvoi', 'XOF'),
             deviseReception=validated_data.get('deviseReception', 'XOF'),
@@ -67,7 +69,7 @@ class TransactionSerializers(serializers.ModelSerializer):
         return transaction
 
 class TransactionDetailSerializer(serializers.ModelSerializer):
-    status_display = serializers.CharField(source='get_statusTransaction_display', read_only=True)  # Ajouté
+    status_display = serializers.CharField(source='get_statusTransaction_display', read_only=True)
     
     class Meta:
         model = Transaction

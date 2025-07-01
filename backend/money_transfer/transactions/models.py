@@ -98,11 +98,14 @@ class Transaction(models.Model):
         random_part = ''.join(random.choices(string.digits, k=6))
         return f"TXN{year}{random_part}"
     
-    def generate_id_transaction(self):  # Corrigé: indentation
-        """Génère un ID de transaction numérique unique"""
-        timestamp = int(timezone.now().timestamp())
-        random_part = random.randint(1000, 9999)
-        return int(f"{timestamp}{random_part}")  # Corrigé: retourner int, pas string
+    def generate_id_transaction(self):
+        """Génère un ID transaction numérique unique"""
+        # Récupérer le dernier ID + 1
+        last_transaction = Transaction.objects.order_by('-idTransaction').last()
+        if last_transaction and last_transaction.idTransaction:
+            return last_transaction.idTransaction + 1
+        else:
+            return 100000001  # Premier ID (commence à 100000001)
     
     def __str__(self):  # Corrigé: indentation
         return f"Transaction {self.codeTransaction} - {self.montantEnvoye} {self.deviseEnvoi}"

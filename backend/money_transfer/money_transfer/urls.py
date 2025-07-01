@@ -1,22 +1,44 @@
-"""
-URL configuration for money_transfer project.
+# money_transfer/urls.py (URLs principales du projet)
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
+    # Admin Django
     path('admin/', admin.site.urls),
+    
+    # APIs par version
+    path('api/v1/transactions/', include('transactions.urls')),  # Dev 2 (TOI)
 ]
+
+# Servir les fichiers media en développement
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# URLs complètes finales :
+"""
+Admin:
+http://127.0.0.1:8000/admin/
+
+APIs Dev 2 (Transactions):
+http://127.0.0.1:8000/api/v1/transactions/
+http://127.0.0.1:8000/api/v1/transactions/send-money/
+http://127.0.0.1:8000/api/v1/transactions/beneficiaires/
+http://127.0.0.1:8000/api/v1/transactions/canaux/
+http://127.0.0.1:8000/api/v1/transactions/exchange-rates/
+http://127.0.0.1:8000/api/v1/transactions/search/
+
+APIs Dev 1 (Authentication - à venir):
+http://127.0.0.1:8000/api/v1/auth/login/
+http://127.0.0.1:8000/api/v1/auth/register/
+
+APIs Dev 3 (Agents - à venir):
+http://127.0.0.1:8000/api/v1/agents/
+http://127.0.0.1:8000/api/v1/agents/nearby/
+
+Documentation:
+http://127.0.0.1:8000/docs/
+"""
