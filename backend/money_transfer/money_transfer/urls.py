@@ -11,12 +11,16 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     # APIs par version
+    path('api/kyc/', include('kyc.urls')),                  # ⭐ NOUVEAU
+    path('api/notifications/', include('notifications.urls')), # ⭐ NOUVEAU
     path('api/v1/transactions/', include('transactions.urls')),  # Dev 2 (TOI)
+    path('api/auth/', include('authentication.urls')),
 ]
 
 # Servir les fichiers media en développement
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
 # URLs complètes finales :
 """
