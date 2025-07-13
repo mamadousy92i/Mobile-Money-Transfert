@@ -3,7 +3,7 @@ from .models import Notification
 
 
 class NotificationSerializer(serializers.ModelSerializer):
-    """Serializer for user notifications."""
+    """Sérialiseur pour les notifications utilisateur."""
     
     notification_type_display = serializers.SerializerMethodField()
     status_display = serializers.SerializerMethodField()
@@ -24,14 +24,14 @@ class NotificationSerializer(serializers.ModelSerializer):
         return obj.get_status_display()
     
     def create(self, validated_data):
-        # Set auto_sent to False for manually created notifications
+        # Définir auto_sent à False pour les notifications créées manuellement
         if 'auto_sent' not in validated_data:
             validated_data['auto_sent'] = False
         return super().create(validated_data)
 
 
 class AdminNotificationSerializer(NotificationSerializer):
-    """Serializer for admin to create notifications."""
+    """Sérialiseur permettant à l'administrateur de créer des notifications."""
     
     class Meta(NotificationSerializer.Meta):
-        read_only_fields = ['created_at', 'seen_at']  # Admin can set status
+        read_only_fields = ['created_at', 'seen_at']  # L'administrateur peut définir le statut

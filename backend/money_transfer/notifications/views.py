@@ -8,14 +8,14 @@ from .serializers import NotificationSerializer, AdminNotificationSerializer
 
 class IsOwnerOrAdmin(permissions.BasePermission):
     """
-    Custom permission to only allow owners of a notification or admins to view it.
+    Permission personnalisée pour permettre uniquement aux propriétaires d'une notification ou aux administrateurs de la consulter.
     """
     def has_object_permission(self, request, view, obj):
-        # Allow admin users
+        # Autoriser les utilisateurs administrateurs
         if request.user.is_staff:
             return True
         
-        # Check if the object has a user attribute
+        # Vérifier si l'objet a un attribut utilisateur
         if hasattr(obj, 'user'):
             return obj.user == request.user
         
@@ -27,16 +27,16 @@ class NotificationViewSet(mixins.ListModelMixin,
                           mixins.CreateModelMixin,
                           viewsets.GenericViewSet):
     """
-    API viewset for notifications.
-    GET: List notifications for current user
-    POST: Create notification (admin only)
+    Ensemble de vues API pour les notifications.
+    GET: Liste les notifications pour l'utilisateur actuel
+    POST: Crée une notification (admin uniquement)
     """
     serializer_class = NotificationSerializer
     permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
         user = self.request.user
-        # Admin can see all notifications, regular users only see their own
+        # L'administrateur peut voir toutes les notifications, les utilisateurs réguliers ne voient que les leurs
         if user.is_staff:
             return Notification.objects.all().order_by('-created_at')
         return Notification.objects.filter(user=user).order_by('-created_at')
@@ -47,23 +47,23 @@ class NotificationViewSet(mixins.ListModelMixin,
         return NotificationSerializer
     
     def create(self, request, *args, **kwargs):
-        # Only admins can create notifications
+        # Seuls les administrateurs peuvent créer des notifications
         if not request.user.is_staff:
             return Response(
-                {'detail': 'You do not have permission to create notifications.'},
+                {'detail': 'Vous n\'avez pas la permission de créer des notifications.'},
                 status=status.HTTP_403_FORBIDDEN
             )
         return super().create(request, *args, **kwargs)
     
     @action(detail=True, methods=['patch'])
     def read(self, request, pk=None):
-        """Mark a notification as read."""
+        """Marquer une notification comme lue."""
         notification = self.get_object()
         
-        # Check if the user is the owner or an admin
+        # Vérifier si l'utilisateur est le propriétaire ou un administrateur
         if notification.user != request.user and not request.user.is_staff:
             return Response(
-                {'detail': 'You do not have permission to mark this notification as read.'},
+                {'detail': 'Vous n\'avez pas la permission de marquer cette notification comme lue.'},
                 status=status.HTTP_403_FORBIDDEN
             )
         
@@ -72,21 +72,21 @@ class NotificationViewSet(mixins.ListModelMixin,
         return Response(serializer.data)
 
 
-# Abstract base class for notification channels
+# Classe de base abstraite pour les canaux de notification
 class NotificationChannel:
     """
-    Abstract base class for notification channels.
-    This can be extended for SMS, FCM, etc.
+    Classe de base abstraite pour les canaux de notification.
+    Peut être étendue pour SMS, FCM, etc.
     """
     def send(self, user, title, message, notification_type='INFO'):
-        """Send notification through the channel."""
-        raise NotImplementedError('Subclasses must implement send()')
+        """Envoyer une notification via le canal."""
+        raise NotImplementedError('Les sous-classes doivent implémenter send()')
 
 
 class DatabaseNotificationChannel(NotificationChannel):
-    """Database notification channel implementation."""
+    """Implémentation du canal de notification en base de données."""
     def send(self, user, title, message, notification_type='INFO'):
-        """Create a notification in the database."""
+        """Créer une notification dans la base de données."""
         return Notification.objects.create(
             user=user,
             title=title,
@@ -96,21 +96,21 @@ class DatabaseNotificationChannel(NotificationChannel):
         )
 
 
-# Factory for getting notification channels
+# Fabrique pour obtenir des canaux de notification
 class NotificationChannelFactory:
-    """Factory for creating notification channel instances."""
+    """Fabrique pour créer des instances de canaux de notification."""
     @staticmethod
     def get_channel(channel_type='database'):
-        """Get notification channel by type."""
+        """Obtenir un canal de notification par type."""
         channels = {
             'database': DatabaseNotificationChannel,
-            # Add more channels here as they are implemented
+            # Ajouter plus de canaux ici au fur et à mesure de leur implémentation
             # 'sms': SMSNotificationChannel,
             # 'fcm': FCMNotificationChannel,
         }
         
         channel_class = channels.get(channel_type.lower())
         if not channel_class:
-            raise ValueError(f'Unsupported notification channel: {channel_type}')
+            raise ValueError(f'Canal de notification non pris en charge: {channel_type}')
         
         return channel_class()

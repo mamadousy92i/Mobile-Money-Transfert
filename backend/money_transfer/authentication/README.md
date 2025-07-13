@@ -1,19 +1,49 @@
-# Authentication App
+# Application d'Authentification
 
-This app provides a custom User model and JWT authentication for the Money Transfer project.
+Cette application fournit un modèle d'utilisateur personnalisé et une authentification JWT pour le projet de Transfert d'Argent Mobile.
 
-## Features
+## Description
 
-- Custom User model with phone number as the primary authentication field
-- JWT authentication using SimpleJWT
-- API endpoints for registration, login, logout, token refresh, and profile management
-- KYC status tracking for users
+L'application d'authentification gère l'ensemble du processus d'authentification des utilisateurs dans le système. Elle utilise un modèle d'utilisateur personnalisé avec le numéro de téléphone comme champ d'authentification principal et implémente l'authentification JWT (JSON Web Token) pour sécuriser les API.
 
-## Usage in Other Apps
+## Fonctionnalités
 
-### Importing the User Model
+- Modèle d'utilisateur personnalisé avec numéro de téléphone comme champ d'authentification principal
+- Authentification JWT utilisant SimpleJWT
+- Points d'API pour l'inscription, la connexion, la déconnexion, le rafraîchissement de token et la gestion de profil
+- Suivi du statut KYC (Know Your Customer) pour les utilisateurs
+- Permissions personnalisées pour contrôler l'accès aux ressources
 
-To use the User model in other apps, import it using Django's get_user_model():
+## Structure
+
+L'application est organisée comme suit :
+- `models.py` : Définit le modèle d'utilisateur personnalisé et son gestionnaire
+- `views.py` : Contient les vues API pour l'authentification et la gestion des utilisateurs
+- `serializers.py` : Définit les sérialiseurs pour la validation et la transformation des données utilisateur
+- `permissions.py` : Implémente des permissions personnalisées pour contrôler l'accès
+- `signals.py` : Configure les signaux pour interagir avec d'autres applications
+- `urls.py` : Définit les routes d'API pour l'application
+
+## Dépendances
+
+- Django REST Framework
+- SimpleJWT pour l'authentification par token
+- Django Signals pour la communication inter-applications
+
+## Points d'API
+
+- `/api/auth/register/` : Inscription d'un nouvel utilisateur
+- `/api/auth/login/` : Connexion et obtention des tokens JWT
+- `/api/auth/logout/` : Déconnexion et mise en liste noire du token de rafraîchissement
+- `/api/auth/refresh/` : Rafraîchissement du token d'accès
+- `/api/auth/profile/` : Consultation ou mise à jour du profil utilisateur
+- `/api/auth/change-password/` : Modification du mot de passe utilisateur
+
+## Utilisation dans d'autres applications
+
+### Importation du modèle utilisateur
+
+Pour utiliser le modèle utilisateur dans d'autres applications, importez-le en utilisant la fonction `get_user_model()` de Django :
 
 ```python
 from django.contrib.auth import get_user_model
@@ -21,16 +51,16 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 ```
 
-### Using Signals
+### Utilisation des signaux
 
-The authentication app provides signals that other apps can connect to:
+L'application d'authentification fournit des signaux auxquels d'autres applications peuvent se connecter :
 
-- `post_save` signal when a user is created or updated
+- Signal `post_save` lorsqu'un utilisateur est créé ou mis à jour
 
-Example of connecting to these signals in another app:
+Exemple de connexion à ces signaux dans une autre application :
 
 ```python
-# In your app's signals.py
+# Dans le fichier signals.py de votre application
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
@@ -38,33 +68,35 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 @receiver(post_save, sender=User)
-def handle_user_creation(sender, instance, created, **kwargs):
+def gerer_creation_utilisateur(sender, instance, created, **kwargs):
     if created:
-        # Create related records in your app when a user is created
+        # Créer des enregistrements associés dans votre application lorsqu'un utilisateur est créé
         pass
 ```
 
-### KYC Status
+### Statut KYC
 
-The User model includes a `kyc_status` field with the following choices:
-- `PENDING`: Default status for new users
-- `VERIFIED`: User has completed KYC verification
-- `REJECTED`: User's KYC verification was rejected
+Le modèle utilisateur inclut un champ `kyc_status` avec les choix suivants :
+- `PENDING` : Statut par défaut pour les nouveaux utilisateurs
+- `VERIFIED` : L'utilisateur a complété la vérification KYC
+- `REJECTED` : La vérification KYC de l'utilisateur a été rejetée
 
-You can check a user's KYC status like this:
+Vous pouvez vérifier le statut KYC d'un utilisateur comme ceci :
 
 ```python
 user = User.objects.get(phone_number='1234567890')
 if user.kyc_status == User.KYCStatus.VERIFIED:
-    # Allow access to features that require KYC verification
+    # Autoriser l'accès aux fonctionnalités nécessitant une vérification KYC
     pass
 ```
 
-## API Endpoints
+## Bonnes pratiques
 
-- `/api/auth/register/`: Register a new user
-- `/api/auth/login/`: Login and get JWT tokens
-- `/api/auth/logout/`: Logout and blacklist refresh token
-- `/api/auth/refresh/`: Refresh access token
-- `/api/auth/profile/`: Get or update user profile
-- `/api/auth/change-password/`: Change user password
+- Toujours utiliser `get_user_model()` plutôt que d'importer directement le modèle User
+- Utiliser les permissions appropriées pour protéger les points d'API sensibles
+- Vérifier le statut KYC avant d'autoriser l'accès aux fonctionnalités restreintes
+- Utiliser les signaux pour maintenir la cohérence des données entre les applications
+
+## Contributeurs
+
+- Équipe de développement du projet Mobile Money Transfer

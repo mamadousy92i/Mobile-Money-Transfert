@@ -4,26 +4,26 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-# This file is prepared for signals that will be used by other apps
-# For example, when a user is created, we might want to create related records in other apps
+# Ce fichier est préparé pour les signaux qui seront utilisés par d'autres applications
+# Par exemple, lorsqu'un utilisateur est créé, nous pourrions vouloir créer des enregistrements associés dans d'autres applications
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     """
-    Signal to handle user creation events.
-    This can be used by other apps like 'kyc' to create a KYC record when a user is created.
+    Signal pour gérer les événements de création d'utilisateur.
+    Ceci peut être utilisé par d'autres applications comme 'kyc' pour créer un enregistrement KYC lorsqu'un utilisateur est créé.
     """
     if created:
-        # Example of how other apps can hook into user creation
-        # This is a placeholder and will be implemented by other apps
+        # Exemple de comment d'autres applications peuvent s'accrocher à la création d'utilisateur
+        # Ceci est un espace réservé et sera implémenté par d'autres applications
         pass
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     """
-    Signal to handle user update events.
-    This can be used by other apps to update related records when a user is updated.
+    Signal pour gérer les événements de mise à jour d'utilisateur.
+    Ceci peut être utilisé par d'autres applications pour mettre à jour les enregistrements associés lorsqu'un utilisateur est mis à jour.
     """
-    # Example of how other apps can hook into user updates
-    # This is a placeholder and will be implemented by other apps
+    # Exemple de comment d'autres applications peuvent s'accrocher aux mises à jour d'utilisateur
+    # Ceci est un espace réservé et sera implémenté par d'autres applications
     pass

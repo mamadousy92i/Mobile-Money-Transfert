@@ -7,7 +7,7 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """Serializer for the User model."""
+    """Sérialiseur pour le modèle User."""
     
     class Meta:
         model = User
@@ -16,7 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    """Serializer for user registration."""
+    """Sérialiseur pour l'inscription des utilisateurs."""
     
     email = serializers.EmailField(
         required=True,
@@ -39,7 +39,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     
     def validate(self, attrs):
         if attrs['password'] != attrs['password_confirm']:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
+            raise serializers.ValidationError({"password": "Les champs de mot de passe ne correspondent pas."})
         return attrs
     
     def create(self, validated_data):
@@ -49,7 +49,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
-    """Serializer for updating user profile."""
+    """Sérialiseur pour la mise à jour du profil utilisateur."""
     
     class Meta:
         model = User
@@ -57,7 +57,7 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
         
 
 class ChangePasswordSerializer(serializers.Serializer):
-    """Serializer for password change."""
+    """Sérialiseur pour le changement de mot de passe."""
     
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True, validators=[validate_password])
@@ -65,5 +65,5 @@ class ChangePasswordSerializer(serializers.Serializer):
     
     def validate(self, attrs):
         if attrs['new_password'] != attrs['confirm_password']:
-            raise serializers.ValidationError({"new_password": "Password fields didn't match."})
+            raise serializers.ValidationError({"new_password": "Les champs de mot de passe ne correspondent pas."})
         return attrs

@@ -4,7 +4,7 @@ from authentication.models import User
 
 
 class KYCDocumentSerializer(serializers.ModelSerializer):
-    """Serializer for KYC document upload and status check."""
+    """Sérialiseur pour le téléchargement et la vérification du statut des documents KYC."""
     
     user_full_name = serializers.SerializerMethodField()
     status_display = serializers.SerializerMethodField()
@@ -28,20 +28,20 @@ class KYCDocumentSerializer(serializers.ModelSerializer):
         return obj.get_document_type_display()
     
     def create(self, validated_data):
-        # Set the user to the current authenticated user
+        # Définir l'utilisateur comme l'utilisateur authentifié actuel
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
 
 
 class KYCDocumentAdminSerializer(KYCDocumentSerializer):
-    """Serializer for admin operations on KYC documents."""
+    """Sérialiseur pour les opérations administratives sur les documents KYC."""
     
     class Meta(KYCDocumentSerializer.Meta):
         read_only_fields = ['document_type', 'document_number', 'document_image', 'submitted_at', 'user']
 
 
 class UserKYCStatusSerializer(serializers.ModelSerializer):
-    """Serializer for user KYC status."""
+    """Sérialiseur pour le statut KYC de l'utilisateur."""
     
     kyc_status_display = serializers.SerializerMethodField()
     kyc_documents = KYCDocumentSerializer(many=True, read_only=True)
