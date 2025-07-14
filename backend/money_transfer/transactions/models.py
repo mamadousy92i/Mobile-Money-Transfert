@@ -443,8 +443,10 @@ class Beneficiaire(models.Model):
 
 # transactions/models.py - AJOUTS INTERNATIONAUX
 
+# Dans transactions/models.py - CORRIGER le modèle Pays
+
 class Pays(models.Model):
-    """Pays supportés pour transferts internationaux"""
+    """Pays supportés pour transferts internationaux - VERSION CORRIGÉE"""
     code_iso = models.CharField(max_length=3, unique=True)  # SEN, COG, MLI, CIV
     nom = models.CharField(max_length=50)
     devise = models.CharField(max_length=3)  # XOF, CDF, XAF, EUR
@@ -452,9 +454,19 @@ class Pays(models.Model):
     is_active = models.BooleanField(default=True)
     flag_emoji = models.CharField(max_length=10, default="🇸🇳")
     
-    # Limites par pays
-    limite_envoi_min = models.DecimalField(max_digits=10, decimal_places=2, default=100)
-    limite_envoi_max = models.DecimalField(max_digits=10, decimal_places=2, default=500000)
+    # ===== CHAMPS QUI MANQUAIENT =====
+    limite_envoi_min = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=100,
+        help_text="Montant minimum pour envoi vers ce pays"
+    )
+    limite_envoi_max = models.DecimalField(
+        max_digits=10, 
+        decimal_places=2, 
+        default=500000,
+        help_text="Montant maximum pour envoi vers ce pays"
+    )
     
     created_at = models.DateTimeField(auto_now_add=True)
     
@@ -465,9 +477,13 @@ class Pays(models.Model):
     def __str__(self):
         return f"{self.flag_emoji} {self.nom} ({self.devise})"
 
+# Dans transactions/models.py - Mettre à jour ServicePaiementInternational
+
 class ServicePaiementInternational(models.Model):
-    """Services de paiement mobile par pays"""
+    """Services de paiement mobile par pays - VERSION ÉTENDUE 10 PAYS"""
+    
     TYPE_CHOICES = [
+        # Services existants
         ('MTN_MONEY', 'MTN Money'),
         ('AIRTEL_MONEY', 'Airtel Money'), 
         ('ORANGE_MONEY', 'Orange Money'),
@@ -475,7 +491,20 @@ class ServicePaiementInternational(models.Model):
         ('MOOV_MONEY', 'Moov Money'),
         ('WESTERN_UNION', 'Western Union'),
         ('MONEYGRAM', 'MoneyGram'),
+        
+        # NOUVEAUX SERVICES POUR LES 10 PAYS
+        ('INWI_MONEY', 'Inwi Money'),           # Maroc
+        ('OPAY', 'Opay'),                       # Nigeria
+        ('VODAFONE_CASH', 'Vodafone Cash'),     # Ghana
+        ('AIRTELTIGO_MONEY', 'AirtelTigo Money'), # Ghana
+        ('TIGO_CASH', 'Tigo Cash'),             # Ghana (alternative)
+        ('ECOBANK_MOBILE', 'Ecobank Mobile'),   # Multi-pays
+        ('UBA_MOBILE', 'UBA Mobile'),           # Multi-pays
+        ('ZENITH_MOBILE', 'Zenith Mobile'),     # Nigeria
+        ('ACCESS_MOBILE', 'Access Mobile'),     # Nigeria
+        ('FIDELITY_MOBILE', 'Fidelity Mobile'), # Nigeria
     ]
+    
     
     pays = models.ForeignKey(Pays, on_delete=models.CASCADE, related_name='services')
     nom = models.CharField(max_length=50)  # "MTN Money Congo", "Orange Mali"
