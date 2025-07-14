@@ -15,6 +15,7 @@ User = get_user_model()
 
 class TransactionSerializers(serializers.ModelSerializer):
     beneficiaire_phone = serializers.CharField(max_length=20, write_only=True) 
+    """beneficiaire_phone"""
     canal_paiement_id = serializers.UUIDField(write_only=True)  
     
     class Meta:
@@ -377,11 +378,13 @@ class SendMoneyResponseSerializer(serializers.Serializer):
     destinataire_nom = serializers.CharField(required=False)
 
 
+# Dans transactions/serializers.py - CORRECTION BeneficiaireSerializer
+
 class BeneficiaireSerializer(serializers.ModelSerializer):
     """Serializer pour les bénéficiaires"""
     
     # Informations sur l'utilisateur correspondant
-    est_utilisateur_inscrit = serializers.BooleanField(source='est_utilisateur_inscrit', read_only=True)
+    est_utilisateur_inscrit = serializers.BooleanField(read_only=True)  # ✅ CORRIGÉ - supprimé source
     nom_utilisateur_inscrit = serializers.SerializerMethodField()
     
     class Meta:
@@ -437,6 +440,7 @@ class BeneficiaireSerializer(serializers.ModelSerializer):
         # Vérifier si l'utilisateur correspondant existe
         user_correspondant = None
         try:
+            User = get_user_model()
             user_correspondant = User.objects.get(phone_number=validated_data['phone'])
         except User.DoesNotExist:
             pass
