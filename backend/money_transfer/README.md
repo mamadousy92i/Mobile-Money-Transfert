@@ -40,9 +40,9 @@ Plateforme de transfert d'argent de niveau entreprise, conçue avec une architec
 
 Le backend est conçu autour d’une **architecture modulaire Django** : chaque domaine métier est une app indépendante, reliée par des signaux ou des appels de services.
 
-- **Développeur 1** : `authentication`, `kyc`, `notifications`  
-- **Développeur 2** : `transactions`, `payment_gateways`  
-- **Développeur 3** : `agents`, `withdrawals`, `dashboard`, `reception`
+- **Utilisateurs & KYC & Notification** : `authentication`, `kyc`, `notifications`  
+- **DTransactions & Paiments** : `transactions`, `payment_gateways`  
+- **Agent ,Reception et Dashboard** : `agents`, `withdrawals`, `dashboard`, `reception`
 
 Les modules interagissent via des signaux (`post_save`, etc.), garantissant un **faible couplage** entre les apps.
 
