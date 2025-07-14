@@ -188,10 +188,14 @@ money-transfer-backend/
 ## ✍️ Auteurs et Contact
 
 👨‍💻 **Nom** : Mamadou SY
+
 💼 **Rôle** : Développeur Full Stack Web & Mobile
+
 📧 **Email** : [92mamadousy@gmail.com](mailto:92mamadousy@gmail.com)
+
 📱 **Téléphone** : +221 77 756 72 26 / +221 76 623 21 05
-🔗 **GitHub** : [github.com/ton-profil](https://github.com/ton-profil)
+
+🔗 **GitHub** : [github.com/ton-profil]([https://github.com/ton-profil](https://github.com/mamadousy92i))
 
 ---
 
