@@ -153,7 +153,7 @@ money-transfer-backend/
 | `/api/v1/dashboard/`    | Indicateurs en temps réel          |
 
 📦 **Postman Collection** incluse pour test exhaustif.
-📥 [Télécharger la collection Postman](./mobile money transfert.postman_collection.json)
+📥 [Télécharger la collection Postman](./mobile_money_transfert.postman_collection.json)
 
 
 ---
