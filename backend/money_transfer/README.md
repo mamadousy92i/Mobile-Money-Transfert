@@ -226,8 +226,11 @@ Projet sous licence MIT. Voir le fichier `LICENSE`.
 Ce projet a été développé et architecturé par :
 
 **👤 Nom** : Mamadou SY
+
 **🎯 Rôle** : Développeur Full Stack Web et Mobile
+
 **📧 Email** : [92mamadousy@gmail.com](mailto:92mamadousy@gmail.com)
+
 **📱 Téléphone** : +221 77 756 72 26 / +221 76 623 21 05
 
 *N'hésitez pas à me contacter pour toute question, collaboration ou opportunité.*
