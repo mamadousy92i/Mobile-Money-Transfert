@@ -195,7 +195,7 @@ money-transfer-backend/
 
 📱 **Téléphone** : +221 77 756 72 26 / +221 76 623 21 05
 
-🔗 **GitHub** : [github.com/ton-profil]([https://github.com/ton-profil](https://github.com/mamadousy92i))
+🔗 **GitHub** : [github.com/ton-profil](https://github.com/mamadousy92i))
 
 ---
 
