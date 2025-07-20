@@ -3,19 +3,19 @@ from rest_framework import permissions
 
 class IsOwner(permissions.BasePermission):
     """
-    Permission personnalisée pour permettre uniquement aux propriétaires d'un objet d'y accéder.
+    Custom permission to only allow owners of an object to access it.
     """
     
     def has_object_permission(self, request, view, obj):
-        # Vérifie si l'utilisateur essaie d'accéder à son propre profil
+        # Check if the user is trying to access their own profile
         return obj.id == request.user.id
 
 
 class IsVerifiedUser(permissions.BasePermission):
     """
-    Permission personnalisée pour permettre uniquement aux utilisateurs avec un statut KYC vérifié.
+    Custom permission to only allow users with verified KYC status.
     """
     
     def has_permission(self, request, view):
-        # Vérifie si l'utilisateur est authentifié et a un statut KYC vérifié
+        # Check if user is authenticated and has verified KYC status
         return request.user.is_authenticated and request.user.kyc_status == request.user.KYCStatus.VERIFIED
