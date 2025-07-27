@@ -18,7 +18,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '10.0.2.2',              # Android emulator (Dev 3)
     '0.0.0.0',               # Pour tests réseau (Dev 3)
-    '1d280c1eed5e.ngrok-free.app',
+    '553da07603d3.ngrok-free.app',
     '*.ngrok-free.app',
 ] + config('ADDITIONAL_HOSTS', default='', cast=Csv())
 
@@ -159,7 +159,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://localhost:8080",          # Vue/dev server
     "http://127.0.0.1:8080",
-    "https://1d280c1eed5e.ngrok-free.app",
+    "https://553da07603d3.ngrok-free.app",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = DEBUG  # Tous origins en développement
