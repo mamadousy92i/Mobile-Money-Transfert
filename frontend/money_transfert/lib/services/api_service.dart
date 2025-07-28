@@ -24,6 +24,10 @@ class ApiService {
   // Méthode pour obtenir l'instance de AuthApi
   static AuthApi getAuthApi() {
     final retrofitClient = RetrofitClient();
+    // S'assurer que l'instance est initialisée
+    if (retrofitClient.dio == null) {
+      retrofitClient.init();
+    }
     return AuthApi(retrofitClient.dio);
   }
 

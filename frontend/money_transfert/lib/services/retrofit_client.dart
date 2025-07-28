@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import 'api_constants.dart';
+import 'token_service.dart';
+import 'jwt_interceptor.dart';
 
 class RetrofitClient {
   static final RetrofitClient _instance = RetrofitClient._internal();
@@ -42,6 +44,10 @@ class RetrofitClient {
         handler.next(error);
       },
     ));
+    
+    // Ajouter le JwtInterceptor pour gérer l'authentification
+    final tokenService = TokenService();
+    _dio.interceptors.add(JwtInterceptor(tokenService, _dio, ApiConstants.baseUrl));
   }
 
   // Méthode pour changer l'URL de base (utile pour ngrok)

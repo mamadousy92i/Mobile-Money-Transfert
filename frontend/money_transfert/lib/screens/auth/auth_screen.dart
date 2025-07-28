@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 import '../../models/country.dart';
 import '../../providers/auth_provider.dart';
 import '../../widgets/custom_text_field.dart';
@@ -456,8 +457,8 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                     );
                     
                     if (success && context.mounted) {
-                      // Naviguer vers la page d'accueil
-                      Navigator.pushReplacementNamed(context, '/home');
+                      // Naviguer vers la page d'accueil avec GoRouter
+                      context.go('/home');
                     } else if (context.mounted) {
                       // Afficher une erreur
                       ScaffoldMessenger.of(context).showSnackBar(

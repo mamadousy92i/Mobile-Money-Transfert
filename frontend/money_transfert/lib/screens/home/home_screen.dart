@@ -197,6 +197,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavigation(
+        currentTab: _currentTab,
+        onTabChange: _handleTabChange,
+      ),
     );
   }
 
