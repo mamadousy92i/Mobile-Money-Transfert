@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import 'retrofit_client.dart';
 import 'transaction_service.dart';
+import 'api/auth_api.dart';
 import '../models/responses/api_error_response.dart';
 
 class ApiService {
@@ -18,6 +19,12 @@ class ApiService {
     final retrofitClient = RetrofitClient();
     retrofitClient.init();
     _transactionService = TransactionService(retrofitClient.dio);
+  }
+
+  // Méthode pour obtenir l'instance de AuthApi
+  static AuthApi getAuthApi() {
+    final retrofitClient = RetrofitClient();
+    return AuthApi(retrofitClient.dio);
   }
 
   // Méthode utilitaire pour gérer les erreurs

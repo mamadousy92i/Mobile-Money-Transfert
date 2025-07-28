@@ -37,8 +37,8 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
   final _loginFormKey = GlobalKey<FormState>();
   final _registerFormKey = GlobalKey<FormState>();
 
-  // Variable d'état pour le bouton de connexion
-  bool _loginButtonDisabled = true;
+  // ValueNotifier pour l'état du bouton de connexion
+  final _loginButtonEnabled = ValueNotifier<bool>(false);
 
   @override
   void initState() {
@@ -48,6 +48,9 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
     // Ajouter des écouteurs pour mettre à jour l'état du bouton
     _loginPhoneController.addListener(_updateLoginButtonState);
     _loginPasswordController.addListener(_updateLoginButtonState);
+    
+    // Vérifier l'état initial du bouton
+    _updateLoginButtonState();
   }
 
   @override
@@ -68,16 +71,15 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
     _registerConfirmPasswordController.dispose();
     _rememberMe.dispose();
     _acceptTerms.dispose();
+    _loginButtonEnabled.dispose();
     super.dispose();
   }
 
   // Méthode pour mettre à jour l'état du bouton de connexion
   void _updateLoginButtonState() {
-    final newState = _loginPhoneController.text.isEmpty || _loginPasswordController.text.isEmpty;
-    if (newState != _loginButtonDisabled) {
-      setState(() {
-        _loginButtonDisabled = newState;
-      });
+    final isEnabled = _loginPhoneController.text.isNotEmpty && _loginPasswordController.text.isNotEmpty;
+    if (_loginButtonEnabled.value != isEnabled) {
+      _loginButtonEnabled.value = isEnabled;
     }
   }
 
@@ -444,7 +446,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                 text: 'Se connecter',
                 icon: Icons.arrow_forward,
                 isLoading: authProvider.isLoading,
-                isDisabled: false, // Forcer l'activation du bouton
+                isDisabled: _loginButtonEnabled.value == false,
                 onPressed: () async {
                   if (_loginFormKey.currentState!.validate()) {
                     final phone = '${_selectedCountry.code}${_loginPhoneController.text.trim()}';

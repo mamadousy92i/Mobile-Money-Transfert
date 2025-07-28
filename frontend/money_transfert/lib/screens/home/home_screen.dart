@@ -1,9 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 import '../../providers/auth_provider.dart';
+import '../../widgets/bottom_navigation.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String _currentTab = 'home';
+
+  void _handleTabChange(String tab) {
+    setState(() {
+      _currentTab = tab;
+    });
+    
+    // Navigation vers l'écran correspondant
+    switch (tab) {
+      case 'profile':
+        context.go('/profile');
+        break;
+      case 'home':
+        // Déjà sur l'écran d'accueil
+        break;
+      case 'transfer':
+        // À implémenter ultérieurement
+        break;
+      case 'agents':
+        // À implémenter ultérieurement
+        break;
+      case 'history':
+        // À implémenter ultérieurement
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +49,9 @@ class HomeScreen extends StatelessWidget {
         title: const Text('MoneyTransfer'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await authProvider.logout();
-              if (context.mounted) {
-                Navigator.pushReplacementNamed(context, '/auth');
-              }
+            icon: const Icon(Icons.notifications_outlined),
+            onPressed: () {
+              // Afficher les notifications
             },
           ),
         ],
