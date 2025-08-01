@@ -83,8 +83,9 @@ money-transfer-app/
 └── 📖 docs/                       # Documentation
 ```
 
-### Diagramme d'Architecture
+### Diagrammes d'Architecture et Workflows
 
+#### 🏗️ Architecture Générale du Système
 ```mermaid
 graph TB
     A[📱 Flutter App] -->|JWT Auth| B[🔐 Django API]
@@ -100,6 +101,52 @@ graph TB
         F
     end
 ```
+
+#### 📊 Diagrammes de Cas d'Usage et Workflows
+
+#### 📊 Diagrammes de Cas d'Usage et Workflows
+
+> **📁 Structure des Diagrammes** : Placez vos diagrammes dans le dossier `docs/diagrams/` avec les noms suivants :
+> - `use_case_diagram.png` - Diagramme de cas d'usage global
+> - `user_transfer_workflow.png` - Workflow de transfert utilisateur  
+> - `receiver_workflow.png` - Workflow de réception
+> - `agent_workflow.png` - Workflow agent local
+> - `simple_receiver_workflow.png` - Workflow réception simplifié
+
+##### 1. Diagramme de Cas d'Usage - Vue Globale
+<div align="center">
+<img src="docs/diagrams/use_case_diagram.png" alt="Diagramme de Cas d'Usage" width="800"/>
+</div>
+
+*Diagramme montrant les interactions entre les différents acteurs (Utilisateur, Émetteur, Agent Local, Bénéficiaire) et les fonctionnalités du système*
+
+##### 2. Workflow de Transfert d'Argent - Processus Utilisateur
+<div align="center">
+<img src="docs/diagrams/user_transfer_workflow.png" alt="Workflow Utilisateur" width="800"/>
+</div>
+
+*Processus complet de transfert d'argent : connexion → saisie → validation → confirmation → génération de reçu*
+
+##### 3. Workflow de Réception - Processus Bénéficiaire
+<div align="center">
+<img src="docs/diagrams/receiver_workflow.png" alt="Workflow Réception" width="800"/>
+</div>
+
+*Processus de réception d'argent : notification → vérification → choix du mode de réception → retrait*
+
+##### 4. Workflow Agent Local - Gestion des Transactions
+<div align="center">
+<img src="docs/diagrams/agent_workflow.png" alt="Workflow Agent" width="800"/>
+</div>
+
+*Processus de gestion des transactions par les agents locaux : authentification → consultation → vérification → traitement*
+
+##### 5. Workflow de Réception Simplifié
+<div align="center">
+<img src="docs/diagrams/simple_receiver_workflow.png" alt="Workflow Réception Simplifié" width="600"/>
+</div>
+
+*Version simplifiée du processus de réception montrant les étapes clés*
 
 ---
 
@@ -137,9 +184,42 @@ graph TB
 
 ---
 
-## 🔄 Workflow
+## 🔄 Workflows Détaillés
 
-### 1. 📲 Initiation du Transfert
+### 📋 Vue d'ensemble des Processus
+
+Nos diagrammes d'activité détaillent les workflows complets de l'application :
+
+#### 🎯 **Acteurs Principaux**
+- **👤 Utilisateur (Émetteur)** : Initie les transferts d'argent
+- **📱 Bénéficiaire** : Reçoit et retire l'argent
+- **🏪 Agent Local** : Facilite les retraits physiques
+- **🏦 Système** : Gère les transactions et notifications
+
+#### 🚀 **Workflows Implementés**
+
+1. **📤 Processus d'Envoi d'Argent**
+   - Authentification sécurisée JWT
+   - Saisie et validation des informations de transfert
+   - Calcul automatique des frais et taux de change
+   - Confirmation et traitement du paiement
+   - Génération de reçu de transaction
+
+2. **📥 Processus de Réception**
+   - Notification automatique au bénéficiaire
+   - Vérification de l'identité de l'expéditeur
+   - Choix du mode de réception (digital/physique)
+   - Retrait sécurisé avec QR code ou agent
+
+3. **🏪 Gestion par Agent Local**
+   - Interface dédiée pour les agents partenaires
+   - Consultation des transactions en attente
+   - Vérification des fonds et identité
+   - Validation et traitement des retraits physiques
+
+### 🔄 Workflow de Transfert d'Argent (Détaillé)
+
+#### Phase 1 : Initiation
 ```
 Utilisateur sélectionne "Transfert International"
     ↓
@@ -222,7 +302,7 @@ Statut final: TERMINE
 
 1. **Cloner le repository**
 ```bash
-git clone https://github.com/votre-username/money-transfer-app.git
+git clone https://github.com/mamadousy92i/money-transfer-app.git
 cd money-transfer-app/backend
 ```
 
@@ -476,10 +556,10 @@ Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de 
 
 ## 👤 Auteur
 
-**Votre Nom**
-- GitHub: [@votre-username](https://github.com/votre-username)
-- Email: votre.email@example.com
-- LinkedIn: [Votre Profil](https://linkedin.com/in/votre-profil)
+**MAMADOU SY**
+- GitHub: [@mamadousy92i](https://github.com/mamadousy92i)
+- Email: 92mamadousy@gmail.com
+- LinkedIn: [Mamadou SY](https://www.linkedin.com/in/mamadou-sy-02166829b/)
 
 ---
 
@@ -489,6 +569,6 @@ Si ce projet vous aide, n'hésitez pas à lui donner une ⭐ !
 
 <div align="center">
 
-**Fait avec ❤️ pour faciliter les transferts d'argent en Afrique**
+**Fait avec ❤️ par MAMADOU SY pour faciliter les transferts d'argent en Afrique**
 
 </div>
