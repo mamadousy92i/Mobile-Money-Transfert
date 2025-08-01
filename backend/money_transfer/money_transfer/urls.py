@@ -14,6 +14,8 @@ from rest_framework.response import Response
 from agents.views import AgentLocalViewSet
 from withdrawals.views import WithdrawalViewSet
 from dashboard.views import DashboardViewSet
+from reception.views import ReceptionViewSet
+from notifications.views import NotificationViewSet
 
 # APIs simples Dev 3
 from . import api_views
@@ -95,6 +97,11 @@ urlpatterns = [
     path('api/validate-withdrawal-code/', api_views.validate_withdrawal_code, name='validate_withdrawal_code'),
     path('api/complete-withdrawal/', api_views.complete_withdrawal, name='complete_withdrawal'),
     path('api/integration-status/', api_views.integration_status, name='integration_status'),
+    
+    path('api/v1/receptions/', include('reception.urls')),
+    path('api/v1/notifications/', include('notifications.urls')),
+
+
 ]
 
 # ===== SERVIR FICHIERS MEDIA & STATIC EN DÉVELOPPEMENT =====

@@ -35,11 +35,28 @@ class NotificationViewSet(mixins.ListModelMixin,
     permission_classes = [permissions.IsAuthenticated]
     
     def get_queryset(self):
-        user = self.request.user
-        # L'administrateur peut voir toutes les notifications, les utilisateurs réguliers ne voient que les leurs
-        if user.is_staff:
-            return Notification.objects.all().order_by('-created_at')
-        return Notification.objects.filter(user=user).order_by('-created_at')
+        """
+        Retourne les notifications pour l'utilisateur connecté.
+        Filtre par statut si le paramètre 'status' est fourni.
+        """
+        # On commence par récupérer toutes les notifications de l'utilisateur
+        queryset = Notification.objects.filter(user=self.request.user)
+        
+        # On récupère le filtre depuis l'URL (ex: "?status=UNREAD")
+        status_filter = self.request.query_params.get('status', None)
+        
+        # ▼▼▼ CORRECTION DE LA LOGIQUE DE FILTRAGE ▼▼▼
+        if status_filter:
+            # Si le filtre est "UNREAD", on applique le filtre.
+            # On vérifie aussi en majuscules pour être sûr.
+            if status_filter.upper() == 'UNREAD':
+                queryset = queryset.filter(status='UNREAD')
+            # On pourrait ajouter d'autres filtres ici plus tard (ex: 'READ')
+        
+        # Si aucun filtre n'est passé, on ne filtre pas et on retourne tout.
+            
+        return queryset.order_by('-created_at')
+    
     
     def get_serializer_class(self):
         if self.request.method == 'POST' and self.request.user.is_staff:
@@ -70,6 +87,43 @@ class NotificationViewSet(mixins.ListModelMixin,
         notification.mark_as_read()
         serializer = self.get_serializer(notification)
         return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def unread_count(self, request):
+        """
+        Retourne le nombre de notifications non lues pour l'utilisateur connecté.
+        """
+        count = Notification.objects.filter(user=request.user, status='UNREAD').count()
+        return Response({'unread_count': count})
+    
+    @action(detail=True, methods=['post'])
+    def mark_as_read(self, request, pk=None):
+        """
+        Marque une notification spécifique comme lue.
+        """
+        try:
+            notification = self.get_queryset().get(pk=pk)
+            if notification.status == 'UNREAD':
+                notification.status = 'READ'
+                notification.save()
+            return Response({'status': 'notification marked as read'}, status=status.HTTP_200_OK)
+        except Notification.DoesNotExist:
+            return Response({'error': 'Notification not found.'}, status=status.HTTP_404_NOT_FOUND)
+        
+    @action(detail=False, methods=['post'])
+    def delete_multiple(self, request):
+        """
+        Supprime plusieurs notifications en une seule fois.
+        Attend une liste d'IDs : {"ids": [1, 2, 3]}
+        """
+        ids_to_delete = request.data.get('ids', [])
+        if not isinstance(ids_to_delete, list):
+            return Response({'error': 'Une liste d\'IDs est requise.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # On ne supprime que les notifications appartenant à l'utilisateur
+        count, _ = self.get_queryset().filter(pk__in=ids_to_delete).delete()
+
+        return Response({'status': f'{count} notifications supprimées.'}, status=status.HTTP_204_NO_CONTENT)
 
 
 # Classe de base abstraite pour les canaux de notification

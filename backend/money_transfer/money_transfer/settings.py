@@ -14,11 +14,11 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 
 # ALLOWED_HOSTS configuration - FUSIONNÉ
 ALLOWED_HOSTS = [
-    'localhost', 
-    '127.0.0.1',
-    '10.0.2.2',              # Android emulator (Dev 3)
-    '0.0.0.0',               # Pour tests réseau (Dev 3)
-    '1d280c1eed5e.ngrok-free.app',
+    'localhost',
+    '127.0.0.1', # <- Virgule ajoutée et la ligne incorrecte supprimée
+    '10.0.2.2',
+    '0.0.0.0',
+    '141456db6fcc.ngrok-free.app',
     '*.ngrok-free.app',
 ] + config('ADDITIONAL_HOSTS', default='', cast=Csv())
 
@@ -155,11 +155,12 @@ CACHES = {
 
 # ===== CONFIGURATION CORS - FUSIONNÉE =====
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",          # React/Vue frontend (Dev 2)
+    "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "http://localhost:8080",          # Vue/dev server
+    "http://localhost:8080",
     "http://127.0.0.1:8080",
-    "https://1d280c1eed5e.ngrok-free.app",
+    "http://localhost:50312", 
+    "https://141456db6fcc.ngrok-free.app",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = DEBUG  # Tous origins en développement
@@ -194,7 +195,7 @@ CORS_ALLOW_METHODS = [
 
 # ===== CONFIGURATION CSRF =====
 CSRF_TRUSTED_ORIGINS = [
-    'https://1d280c1eed5e.ngrok-free.app',
+    'https://a01f5fc9b142.ngrok-free.app',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
     'http://10.0.2.2:8000',           # Android emulator (Dev 3)

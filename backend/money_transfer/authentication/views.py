@@ -4,12 +4,15 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.contrib.auth import get_user_model
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import RetrieveUpdateAPIView
 
 from .serializers import (
     UserSerializer,
     UserRegistrationSerializer,
     UserProfileUpdateSerializer,
-    ChangePasswordSerializer
+    ChangePasswordSerializer,
+    UpdateUserSerializer
 )
 from .permissions import IsOwner
 
@@ -51,42 +54,61 @@ class RefreshTokenView(TokenRefreshView):
     permission_classes = [permissions.AllowAny]
 
 
-class UserProfileView(generics.RetrieveUpdateAPIView):
-    """API endpoint for retrieving and updating user profile."""
+class UserProfileView(RetrieveUpdateAPIView):
+    """
+    Vue pour récupérer (GET) et mettre à jour (PATCH) le profil de l'utilisateur connecté.
+    """
+    permission_classes = [IsAuthenticated]
     
-    queryset = User.objects.all()
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
-    
+    # On définit les serializers à utiliser pour la lecture (GET) et l'écriture (PATCH)
+    serializer_class = UserSerializer
+
     def get_object(self):
+        """Retourne l'utilisateur actuellement authentifié."""
         return self.request.user
-    
+
     def get_serializer_class(self):
-        if self.request.method == 'PUT' or self.request.method == 'PATCH':
-            return UserProfileUpdateSerializer
+        """
+        Utilise UpdateUserSerializer pour les requêtes de mise à jour (PATCH)
+        et UserSerializer pour tout le reste (GET).
+        """
+        if self.request.method == 'PATCH':
+            return UpdateUserSerializer
         return UserSerializer
 
-
-class ChangePasswordView(generics.UpdateAPIView):
-    """API endpoint for changing user password."""
-    
-    serializer_class = ChangePasswordSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    
-    def get_object(self):
-        return self.request.user
-    
     def update(self, request, *args, **kwargs):
-        user = self.get_object()
+        """
+        Personnalise la réponse après une mise à jour réussie.
+        """
+        response = super().update(request, *args, **kwargs)
+        # Après une mise à jour, on retourne le profil complet et à jour.
+        if response.status_code == status.HTTP_200_OK:
+            user = self.get_object()
+            return Response(UserSerializer(user).data)
+        return response
+
+
+class ChangePasswordView(generics.GenericAPIView):
+    """
+    Vue pour changer le mot de passe de l'utilisateur connecté.
+    Accepte les requêtes POST.
+    """
+    serializer_class = ChangePasswordSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
         serializer = self.get_serializer(data=request.data)
         
-        if serializer.is_valid():
-            # Check old password
-            if not user.check_password(serializer.validated_data['old_password']):
-                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+        if serializer.is_valid(raise_exception=True):
+            # Vérifier l'ancien mot de passe
+            if not user.check_password(serializer.data.get("old_password")):
+                return Response({"old_password": ["Mauvais mot de passe."]}, status=status.HTTP_400_BAD_REQUEST)
             
-            # Set new password
-            user.set_password(serializer.validated_data['new_password'])
+            # Mettre le nouveau mot de passe
+            user.set_password(serializer.data.get("new_password"))
             user.save()
-            return Response({"detail": "Password updated successfully."}, status=status.HTTP_200_OK)
+            
+            return Response({"detail": "Mot de passe changé avec succès."}, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

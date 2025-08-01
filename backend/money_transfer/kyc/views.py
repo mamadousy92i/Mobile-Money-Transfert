@@ -1,6 +1,7 @@
-from rest_framework import viewsets, permissions, status, generics
+from rest_framework import viewsets, permissions, generics
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.parsers import MultiPartParser, FormParser
 from .models import KYCDocument
 from .serializers import KYCDocumentSerializer, KYCDocumentAdminSerializer, UserKYCStatusSerializer
 from authentication.models import User
@@ -28,7 +29,8 @@ class KYCDocumentUploadView(generics.CreateAPIView):
     """
     serializer_class = KYCDocumentSerializer
     permission_classes = [permissions.IsAuthenticated]
-    
+    parser_classes = [MultiPartParser, FormParser]
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 

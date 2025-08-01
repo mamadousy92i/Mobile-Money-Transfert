@@ -215,6 +215,8 @@ class TransactionDetailSerializer(serializers.ModelSerializer):
     canal_paiement_nom = serializers.CharField(source='canal_paiement.canal_name', read_only=True)
     canal_paiement_type = serializers.CharField(source='canal_paiement.type_canal', read_only=True)
     gateway_utilise = serializers.SerializerMethodField()
+    pays_origine = serializers.SerializerMethodField()
+    pays_destination = serializers.SerializerMethodField()
     
     class Meta:
         model = Transaction
@@ -245,6 +247,8 @@ class TransactionDetailSerializer(serializers.ModelSerializer):
             'canal_paiement_nom',
             'canal_paiement_type',
             'gateway_utilise',
+            'pays_origine',
+            'pays_destination',
         ]
         read_only_fields = [
             'id', 'idTransaction', 'codeTransaction', 'montantConverti',
@@ -277,6 +281,15 @@ class TransactionDetailSerializer(serializers.ModelSerializer):
         if not representation.get('typeTransaction'):
             representation['typeTransaction'] = 'ENVOI'
         return representation
+    def get_pays_origine(self, obj):
+        if hasattr(obj, 'extension_internationale'):
+            return obj.extension_internationale.pays_origine.nom
+        return "Sénégal" # Valeur par défaut pour les transactions nationales
+
+    def get_pays_destination(self, obj):
+        if hasattr(obj, 'extension_internationale'):
+            return obj.extension_internationale.pays_destination.nom
+        return "Sénégal" # Valeur par défaut pour les transactions nationales
 
 
 class TransactionUpdateStatusSerializer(serializers.ModelSerializer):

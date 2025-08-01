@@ -12,9 +12,14 @@ class KYCDocumentSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = KYCDocument
+        # ▼▼▼ METTEZ À JOUR LA LISTE DES CHAMPS ▼▼▼
         fields = [
             'id', 'user', 'user_full_name', 'document_type', 'document_type_display',
-            'document_number', 'document_image', 'status', 'status_display', 'submitted_at'
+            'document_number', 
+            'document_front_image', # AJOUTÉ
+            'document_back_image',  # AJOUTÉ
+            'selfie_image',         # AJOUTÉ
+            'status', 'status_display', 'submitted_at'
         ]
         read_only_fields = ['status', 'submitted_at', 'user']
     
@@ -37,7 +42,7 @@ class KYCDocumentAdminSerializer(KYCDocumentSerializer):
     """Sérialiseur pour les opérations administratives sur les documents KYC."""
     
     class Meta(KYCDocumentSerializer.Meta):
-        read_only_fields = ['document_type', 'document_number', 'document_image', 'submitted_at', 'user']
+        read_only_fields = ['document_type', 'document_number', 'document_front_image', 'document_back_image', 'selfie_image', 'submitted_at', 'user']
 
 
 class UserKYCStatusSerializer(serializers.ModelSerializer):

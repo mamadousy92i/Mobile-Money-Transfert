@@ -527,7 +527,9 @@ class ServicePaiementInternational(models.Model):
     
     # Validation numéros
     regex_telephone = models.CharField(max_length=100, help_text="Regex pour valider les numéros")
-    
+    numero_longueur = models.PositiveIntegerField( # <-- AJOUTEZ CE CHAMP
+        null=True, blank=True, help_text="Longueur du numéro de téléphone local (sans préfixe)"
+    ) 
     created_at = models.DateTimeField(auto_now_add=True)
     
     def validate_phone(self, phone_number):

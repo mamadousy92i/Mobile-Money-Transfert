@@ -110,7 +110,7 @@ class TransactionAdmin(admin.ModelAdmin):
 
 @admin.register(Pays)
 class PaysAdmin(admin.ModelAdmin):
-    list_display = ['flag_emoji', 'nom', 'code_iso', 'devise', 'prefixe_tel', 'services_count', 'is_active']
+    list_display = ['flag_emoji', 'nom', 'code_iso', 'devise', 'prefixe_tel', 'services_count', 'is_active',]
     list_filter = ['devise', 'is_active']
     search_fields = ['nom', 'code_iso']
     list_editable = ['is_active']
@@ -124,14 +124,14 @@ class PaysAdmin(admin.ModelAdmin):
 
 @admin.register(ServicePaiementInternational)
 class ServicePaiementInternationalAdmin(admin.ModelAdmin):
-    list_display = ['nom', 'pays', 'type_service', 'frais_simple', 'limites_simple', 'is_active']
+    list_display = ['nom', 'pays', 'type_service', 'frais_simple', 'limites_simple', 'is_active','numero_longueur']
     list_filter = ['type_service', 'pays', 'is_active']
     search_fields = ['nom', 'code_service']
     list_editable = ['is_active']
     
     fieldsets = (
         ('Service & Pays', {
-            'fields': ('pays', 'nom', 'type_service', 'code_service', 'is_active')
+            'fields': ('pays', 'nom', 'type_service', 'code_service', 'is_active','numero_longueur')
         }),
         ('Configuration Financière', {
             'fields': ('frais_percentage', 'frais_fixe', 'frais_min', 'frais_max')
