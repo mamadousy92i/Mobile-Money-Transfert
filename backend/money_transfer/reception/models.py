@@ -255,8 +255,8 @@ class Reception(models.Model):
     
     def finaliser_retrait(self, verification_data=None):
         """Finaliser le retrait effectif"""
-        if self.statut != StatutReception.CONFIRME:
-            return False, "Réception non confirmée"
+        if self.statut not in [StatutReception.NOTIFIE, StatutReception.CONFIRME]:
+            return False, "La réception n'est pas en attente de retrait"    
         
         self.statut = StatutReception.RETIRE
         self.date_retrait = timezone.now()

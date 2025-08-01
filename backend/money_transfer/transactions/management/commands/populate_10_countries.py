@@ -126,13 +126,15 @@ class Command(BaseCommand):
                 'pays': 'SEN', 'nom': 'Wave Sénégal', 'type': 'WAVE', 'code': 'WAVE_SN',
                 'frais_pct': 1.0, 'frais_fixe': 0, 'frais_min': 25, 'frais_max': 1500,
                 'limite_min': 100, 'limite_max': 500000,
-                'regex': r'^(\+221|221)?(77|78|70|76|75)\d{7}$'
+                'regex': r'^(\+221|221)?(77|78|70|76|75)\d{7}$',
+                'numero_longueur': 7, 
             },
             {
                 'pays': 'SEN', 'nom': 'Orange Money Sénégal', 'type': 'ORANGE_MONEY', 'code': 'OM_SN',
                 'frais_pct': 1.5, 'frais_fixe': 50, 'frais_min': 100, 'frais_max': 2000,
                 'limite_min': 500, 'limite_max': 750000,
-                'regex': r'^(\+221|221)?(77|78|70|76|75)\d{7}$'
+                'regex': r'^(\+221|221)?(77|78|70|76|75)\d{7}$',
+                'numero_longueur': 7, 
             },
             
             # MALI
@@ -140,7 +142,8 @@ class Command(BaseCommand):
                 'pays': 'MLI', 'nom': 'Orange Money Mali', 'type': 'ORANGE_MONEY', 'code': 'OM_ML',
                 'frais_pct': 1.8, 'frais_fixe': 100, 'frais_min': 150, 'frais_max': 2500,
                 'limite_min': 500, 'limite_max': 400000,
-                'regex': r'^(\+223|223)?(70|76|77|78|79)\d{6}$'
+                'regex': r'^(\+223|223)?(70|76|77|78|79)\d{6}$',
+                'numero_longueur': 6, 
             },
             
             # CONGO RDC
@@ -148,7 +151,8 @@ class Command(BaseCommand):
                 'pays': 'COG', 'nom': 'MTN Money Congo', 'type': 'MTN_MONEY', 'code': 'MTN_CG',
                 'frais_pct': 2.2, 'frais_fixe': 500, 'frais_min': 800, 'frais_max': 15000,
                 'limite_min': 2000, 'limite_max': 800000,
-                'regex': r'^(\+243|243)?(81|82|83|84|85|89)\d{7}$'
+                'regex': r'^(\+243|243)?(81|82|83|84|85|89)\d{7}$',
+                'numero_longueur': 7, 
             },
             
             # CÔTE D'IVOIRE
@@ -156,7 +160,8 @@ class Command(BaseCommand):
                 'pays': 'CIV', 'nom': 'Orange Money Côte d\'Ivoire', 'type': 'ORANGE_MONEY', 'code': 'OM_CI',
                 'frais_pct': 1.6, 'frais_fixe': 60, 'frais_min': 120, 'frais_max': 3000,
                 'limite_min': 200, 'limite_max': 600000,
-                'regex': r'^(\+225|225)?(07|08|09|01|02|03)\d{8}$'
+                'regex': r'^(\+225|225)?(07|08|09|01|02|03)\d{8}$',
+                'numero_longueur': 8, 
             },
             
             # BURKINA FASO
@@ -164,7 +169,8 @@ class Command(BaseCommand):
                 'pays': 'BFA', 'nom': 'Orange Money Burkina', 'type': 'ORANGE_MONEY', 'code': 'OM_BF',
                 'frais_pct': 2.1, 'frais_fixe': 50, 'frais_min': 80, 'frais_max': 1500,
                 'limite_min': 300, 'limite_max': 300000,
-                'regex': r'^(\+226|226)?(70|71|72|73|76|77|78)\d{6}$'
+                'regex': r'^(\+226|226)?(70|71|72|73|76|77|78)\d{6}$',
+                'numero_longueur': 6, 
             },
             
             # GUINÉE
@@ -172,7 +178,8 @@ class Command(BaseCommand):
                 'pays': 'GIN', 'nom': 'MTN Money Guinée', 'type': 'MTN_MONEY', 'code': 'MTN_GN',
                 'frais_pct': 2.0, 'frais_fixe': 2000, 'frais_min': 5000, 'frais_max': 50000,
                 'limite_min': 5000, 'limite_max': 2000000,
-                'regex': r'^(\+224|224)?(62|65|66|67)\d{7}$'
+                'regex': r'^(\+224|224)?(62|65|66|67)\d{7}$',
+                'numero_longueur': 7, 
             },
             
             # MAROC
@@ -180,7 +187,8 @@ class Command(BaseCommand):
                 'pays': 'MAR', 'nom': 'Orange Money Maroc', 'type': 'ORANGE_MONEY', 'code': 'OM_MA',
                 'frais_pct': 1.2, 'frais_fixe': 5, 'frais_min': 10, 'frais_max': 200,
                 'limite_min': 50, 'limite_max': 20000,
-                'regex': r'^(\+212|212)?(6|7)\d{8}$'
+                'regex': r'^(\+212|212)?(6|7)\d{8}$',
+                'numero_longueur': 8, 
             },
             
             # CAMEROUN
@@ -188,7 +196,8 @@ class Command(BaseCommand):
                 'pays': 'CMR', 'nom': 'MTN Money Cameroun', 'type': 'MTN_MONEY', 'code': 'MTN_CM',
                 'frais_pct': 1.8, 'frais_fixe': 200, 'frais_min': 400, 'frais_max': 8000,
                 'limite_min': 500, 'limite_max': 500000,
-                'regex': r'^(\+237|237)?(67|68|69|65|66)\d{7}$'
+                'regex': r'^(\+237|237)?(67|68|69|65|66)\d{7}$',
+                'numero_longueur': 7,   
             },
             
             # NIGERIA
@@ -196,7 +205,8 @@ class Command(BaseCommand):
                 'pays': 'NGA', 'nom': 'MTN Nigeria', 'type': 'MTN_MONEY', 'code': 'MTN_NG',
                 'frais_pct': 1.5, 'frais_fixe': 100, 'frais_min': 200, 'frais_max': 5000,
                 'limite_min': 1000, 'limite_max': 1000000,
-                'regex': r'^(\+234|234)?(703|706|803|806|810|813|814|816|903|906)\d{7}$'
+                'regex': r'^(\+234|234)?(703|706|803|806|810|813|814|816|903|906)\d{7}$',
+                'numero_longueur': 7, 
             },
             
             # GHANA
@@ -204,7 +214,8 @@ class Command(BaseCommand):
                 'pays': 'GHA', 'nom': 'MTN Money Ghana', 'type': 'MTN_MONEY', 'code': 'MTN_GH',
                 'frais_pct': 1.4, 'frais_fixe': 5, 'frais_min': 10, 'frais_max': 500,
                 'limite_min': 20, 'limite_max': 50000,
-                'regex': r'^(\+233|233)?(24|25|53|54|55|59)\d{7}$'
+                'regex': r'^(\+233|233)?(24|25|53|54|55|59)\d{7}$',
+                'numero_longueur': 7, 
             },
         ]
         

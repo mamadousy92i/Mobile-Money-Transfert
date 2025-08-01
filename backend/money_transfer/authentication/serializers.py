@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
 
+
 User = get_user_model()
 
 
@@ -57,13 +58,35 @@ class UserProfileUpdateSerializer(serializers.ModelSerializer):
         
 
 class ChangePasswordSerializer(serializers.Serializer):
-    """Serializer for password change."""
-    
+    """
+    Serializer pour la requête de changement de mot de passe.
+    """
     old_password = serializers.CharField(required=True)
-    new_password = serializers.CharField(required=True, validators=[validate_password])
-    confirm_password = serializers.CharField(required=True)
-    
-    def validate(self, attrs):
-        if attrs['new_password'] != attrs['confirm_password']:
-            raise serializers.ValidationError({"new_password": "Password fields didn't match."})
-        return attrs
+    new_password = serializers.CharField(required=True)
+
+    def validate_new_password(self, value):
+        # Vous pouvez ajouter des règles de validation complexes pour le mot de passe ici
+        if len(value) < 6:
+            raise serializers.ValidationError("Le mot de passe doit contenir au moins 6 caractères.")
+        return value
+
+
+class UpdateUserSerializer(serializers.ModelSerializer):
+    """
+    Serializer pour mettre à jour les informations de base de l'utilisateur.
+    L'email est traité pour éviter les doublons.
+    """
+    email = serializers.EmailField(required=False)
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+
+    def validate_email(self, value):
+        """
+        Vérifie que le nouvel email n'est pas déjà utilisé par un autre utilisateur.
+        """
+        user = self.context['request'].user
+        if User.objects.exclude(pk=user.pk).filter(email=value).exists():
+            raise serializers.ValidationError("Cet email est déjà utilisé par un autre compte.")
+        return value

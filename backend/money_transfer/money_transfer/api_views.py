@@ -17,6 +17,8 @@ from withdrawals.models import Withdrawal
 User = get_user_model()  # ✅ Utilise authentication.User automatiquement
 logger = logging.getLogger(__name__)
 
+
+
 @csrf_exempt
 @require_http_methods(["GET"])
 def agents_list(request):

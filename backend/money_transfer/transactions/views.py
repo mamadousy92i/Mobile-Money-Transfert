@@ -17,6 +17,7 @@ import logging
 from datetime import timedelta  # ← AJOUT MANQUANT
 from django.utils import timezone
 
+
 from .models import Transaction, Beneficiaire, CanalPaiement, StatutTransaction, Pays, ServicePaiementInternational, CorridorTransfert, TransactionInternationale,TypeTransaction
 from .serializers import (
     TransactionSerializers,
@@ -829,6 +830,7 @@ def services_par_pays(request, pays_code):
                 'frais_max': service.frais_max,
                 'limite_min': service.limite_min,
                 'limite_max': service.limite_max,
+                'numero_longueur': service.numero_longueur,
                 'logo': f'/static/logos/{service.type_service.lower()}.png'
             })
         
